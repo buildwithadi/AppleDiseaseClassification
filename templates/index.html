@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Disease Prediction</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f4f0; /* Light green-tinted background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            background-color: #ffffff;
+            padding: 30px 60px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c5e2d; /* Dark green for heading */
+            margin-bottom: 25px;
+        }
+
+        /* --- Form & Upload Section --- */
+        /* This form can be pointed to your backend (e.g., Flask) by changing the 'action' attribute */
+        #prediction-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upload-section {
+            border: 2px dashed #a5d6a7; /* Dashed green border for the drop zone */
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            background-color: #f9fdf9;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .upload-section:hover {
+            background-color: #e8f5e9;
+        }
+
+        /* This hides the default, ugly file input button */
+        #file-input {
+            display: none;
+        }
+
+        .upload-label p {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .upload-label p strong {
+            color: #388e3c; /* Strong green for the "Browse" text */
+        }
+
+        /* --- Image Preview --- */
+        #image-preview-container {
+            margin-bottom: 20px;
+            display: none; /* Hidden by default, shown with JS when an image is selected */
+        }
+
+        #image-preview {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* --- Predict Button --- */
+        #predict-btn {
+            background-color: #4CAF50; /* Classic green */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        #predict-btn:hover {
+            background-color: #45a049; /* Darker green on hover */
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* --- Result Section --- */
+        .result-section {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #fafafa;
+            width: calc(100% - 40px); /* Match container padding */
+        }
+
+        .result-section h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        #result-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* Dynamic classes for styling the result text */
+        .good {
+            color: #2e7d32; /* Green for "Healthy" or "Good" */
+        }
+
+        .bad {
+            color: #d32f2f; /* Red for "Diseased" or "Bad" */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" >
+        <h1>🍎 Apple Leaf Disease Prediction</h1>
+        
+        <form id="prediction-form" action="#" method="post" enctype="multipart/form-data">
+            
+            <label for="file-input" class="upload-section">
+                <div class="upload-label">
+                    <p>Drag & drop your image here, or</p>
+                    <p><strong>Browse file</strong></p>
+                </div>
+            </label>
+            <input type="file" id="file-input" name="image_file" accept="image/*" required>
+
+            <div id="image-preview-container">
+                <img id="image-preview" src="#" alt="Image Preview"/>
+            </div>
+
+            <button type="submit" id="predict-btn">Predict</button>
+
+        </form>
+
+        <div class="result-section" id="result-box">
+            <h2>Prediction Result</h2>
+            <p id="result-text" class="">Your result will appear here.</p>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const resultBox = document.getElementById('result-box');
+        const resultText = document.getElementById('result-text');
+        const predictionForm = document.getElementById('prediction-form');
+
+        // Show image preview when a user selects a file
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                imagePreviewContainer.style.display = 'block'; // Show the preview container
+                reader.onload = function(e) {
+                    imagePreview.setAttribute('src', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // This part is for DEMO PURPOSES to show how the output would look.
+        // In a real application, you would remove this and let the form submit to your server.
+        predictionForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("Please select an image file first.");
+                return;
+            }
+
+            // Simulate a prediction with a loading state
+            resultText.textContent = 'Analyzing...';
+            resultText.className = ''; // Reset color
+            
+            // Simulate a network delay for prediction
+            setTimeout(() => {
+                // Randomly choose a result for the demo
+                const isGood = Math.random() > 0.5;
+                if (isGood) {
+                    resultText.textContent = 'Prediction: Healthy (Good)';
+                    resultText.className = 'good'; // Apply 'good' class for green color
+                } else {
+                    resultText.textContent = 'Prediction: Diseased (Bad)';
+                    resultText.className = 'bad'; // Apply 'bad' class for red color
+                }
+            }, 1500); // 1.5 second delay
+        });
+    </script>
+
+</body>
+</html>
