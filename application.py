@@ -1,7 +1,4 @@
 import os
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 import pickle
