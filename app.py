@@ -32,10 +32,7 @@ def load_and_preprocess_image(img_path):
 
 def make_prediction(image_path):
 
-    with open('models/vgg16Apple.pkl', 'rb') as f:
-        model = pickle.load(f)
-        # Save in proper Keras format
-        model.save("model.h5")
+    model = keras.models.load_model("models/model.h5")
     img_tensor = load_and_preprocess_image(image_path)
     prediction = model.predict(img_tensor)
     
