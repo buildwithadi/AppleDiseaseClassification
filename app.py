@@ -8,9 +8,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
-
-
-
+from tensorflow import keras
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -36,6 +34,8 @@ def make_prediction(image_path):
 
     with open('models/vgg16Apple.pkl', 'rb') as f:
         model = pickle.load(f)
+        # Save in proper Keras format
+        model.save("model.h5")
     img_tensor = load_and_preprocess_image(image_path)
     prediction = model.predict(img_tensor)
     
