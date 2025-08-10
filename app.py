@@ -9,6 +9,8 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
 from tensorflow import keras
+from keras.models import Sequential
+
 
 # Initialize the Flask application
 app = Flask(__name__)

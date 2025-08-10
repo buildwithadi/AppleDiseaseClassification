@@ -3,5 +3,5 @@ numpy
 Pillow
 gunicorn
 matplotlib
-tensorflow==2.12.0
-keras==2.12.0
+tensorflow==2.19.0
+keras==3.10.0
